@@ -1,0 +1,816 @@
+:root {
+    --gold: #d4af37;
+    --gold-dark: #b8960c;
+    --gold-light: #f4d03f;
+    --bg-dark: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #1a1a25;
+    --text-primary: #e8e6e3;
+    --text-secondary: #9a9a9a;
+    --rare: #a335ee;
+    --epic: #ff8000;
+    --legendary: #e6cc80;
+    --common: #1eff00;
+    --rs3-accent: #00b4d8;
+    --osrs-accent: #ffa500;
+    --border-glow: rgba(212, 175, 55, 0.3);
+    --luck-tier1: #1eff00;
+    --luck-tier2: #0070dd;
+    --luck-tier3: #a335ee;
+    --luck-tier4: #ff8000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 20% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(163, 53, 238, 0.03) 0%, transparent 50%),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(212, 175, 55, 0.01) 2px,
+            rgba(212, 175, 55, 0.01) 4px
+        );
+    pointer-events: none;
+    z-index: -1;
+}
+
+.header {
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    position: relative;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.logo {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+    letter-spacing: 0.1em;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+.game-selector {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+}
+
+.game-btn {
+    padding: 1rem 2.5rem;
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: 2px solid var(--text-secondary);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.game-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.game-btn:hover::before {
+    left: 100%;
+}
+
+.game-btn.active.rs3 {
+    border-color: var(--rs3-accent);
+    color: var(--rs3-accent);
+    box-shadow: 0 0 20px rgba(0, 180, 216, 0.3), inset 0 0 20px rgba(0, 180, 216, 0.1);
+}
+
+.game-btn.active.osrs {
+    border-color: var(--osrs-accent);
+    color: var(--osrs-accent);
+    box-shadow: 0 0 20px rgba(255, 165, 0, 0.3), inset 0 0 20px rgba(255, 165, 0, 0.1);
+}
+
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 1000px) {
+    .main-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    background: var(--bg-card);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    padding: 1.5rem;
+    position: relative;
+}
+
+.panel::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.panel-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    background: var(--bg-dark);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.form-group select option {
+    background: var(--bg-dark);
+    color: var(--text-primary);
+}
+
+.team-size-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.team-btn {
+    padding: 0.6rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: var(--bg-dark);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.team-btn:hover {
+    border-color: var(--gold);
+    color: var(--text-primary);
+}
+
+.team-btn.active {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.calculate-btn {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border: none;
+    color: var(--bg-dark);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.calculate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}
+
+.calculate-btn:active {
+    transform: translateY(0);
+}
+
+.results-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-hover) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    padding: 1.25rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--gold);
+}
+
+.stat-card.gp::before { background: var(--legendary); }
+.stat-card.rare::before { background: var(--rare); }
+.stat-card.kph::before { background: var(--common); }
+.stat-card.time::before { background: var(--epic); }
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.stat-card.gp .stat-value { color: var(--legendary); }
+.stat-card.rare .stat-value { color: var(--rare); }
+.stat-card.kph .stat-value { color: var(--common); }
+.stat-card.time .stat-value { color: var(--epic); }
+
+.drops-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.drops-table th {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.drops-table td {
+    padding: 0.875rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+.drops-table tr:hover {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.drop-name {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rarity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.rarity-common { background: var(--common); }
+.rarity-uncommon { background: #0070dd; }
+.rarity-rare { background: var(--rare); }
+.rarity-very-rare { background: var(--epic); }
+.rarity-ultra-rare { background: var(--legendary); }
+
+.drop-rate {
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--text-secondary);
+}
+
+.drop-value {
+    color: var(--legendary);
+    font-weight: 600;
+}
+
+.drop-expected {
+    font-weight: 500;
+}
+
+.probability-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-dark);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.probability-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    transition: width 0.5s ease;
+}
+
+.luck-calculator {
+    margin-top: 1rem;
+}
+
+.luck-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.luck-card {
+    background: var(--bg-dark);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    padding: 1rem;
+    text-align: center;
+}
+
+.luck-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.luck-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.luck-value.good { color: var(--common); }
+.luck-value.bad { color: #ff4444; }
+
+.search-box {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    padding-left: 2.5rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    background: var(--bg-dark);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--text-primary);
+}
+
+.search-box::before {
+    content: '⌕';
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+}
+
+.boss-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.boss-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.boss-grid::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+.boss-grid::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 3px;
+}
+
+.boss-card {
+    padding: 0.75rem;
+    background: var(--bg-dark);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.boss-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-card-hover);
+}
+
+.boss-card.selected {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.boss-card .boss-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.boss-card .boss-tier {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.info-tooltip {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: rgba(212, 175, 55, 0.2);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 16px;
+    font-size: 0.7rem;
+    cursor: help;
+    margin-left: 0.25rem;
+}
+
+.footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+    margin-top: 2rem;
+}
+
+.footer a {
+    color: var(--gold);
+    text-decoration: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.tab-container {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 0.75rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: var(--bg-dark);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.tab-btn:first-child {
+    border-right: none;
+}
+
+.tab-btn.active {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold);
+    border-color: var(--gold);
+}
+
+.hours-input-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.hours-input-group input {
+    flex: 1;
+}
+
+.hours-input-group span {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Luck Enhancer Styles */
+.luck-enhancers-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.luck-enhancers-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.luck-enhancers-title::before {
+    content: '🍀';
+}
+
+.luck-toggle-group {
+    margin-bottom: 0.75rem;
+}
+
+.luck-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-dark);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.luck-toggle:hover {
+    border-color: rgba(212, 175, 55, 0.4);
+    background: var(--bg-card-hover);
+}
+
+.luck-toggle.active {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.luck-toggle.active .luck-checkbox {
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.luck-toggle.active .luck-checkbox::after {
+    opacity: 1;
+}
+
+.luck-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 3px;
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.luck-checkbox::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--bg-dark);
+    font-size: 0.8rem;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.luck-info {
+    flex: 1;
+}
+
+.luck-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.luck-tier-badge {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.luck-tier-badge.tier-1 { background: var(--luck-tier1); color: var(--bg-dark); }
+.luck-tier-badge.tier-2 { background: var(--luck-tier2); color: white; }
+.luck-tier-badge.tier-3 { background: var(--luck-tier3); color: white; }
+.luck-tier-badge.tier-4 { background: var(--luck-tier4); color: var(--bg-dark); }
+
+.luck-effect {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.luck-game-tag {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.luck-game-tag.rs3 {
+    background: var(--rs3-accent);
+    color: var(--bg-dark);
+}
+
+.luck-game-tag.osrs {
+    background: var(--osrs-accent);
+    color: var(--bg-dark);
+}
+
+.luck-summary {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 4px;
+}
+
+.luck-summary-title {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.luck-summary-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.luck-summary-detail {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.luck-active-indicator {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: rgba(30, 255, 0, 0.1);
+    border: 1px solid var(--common);
+    color: var(--common);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+}
+
+.drop-rate-comparison {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.base-rate {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-decoration: line-through;
+}
+
+.boosted-rate {
+    color: var(--common);
+    font-weight: 600;
+}
+
+.luck-boost-badge {
+    display: inline-block;
+    padding: 0.1rem 0.3rem;
+    background: rgba(30, 255, 0, 0.2);
+    color: var(--common);
+    font-size: 0.65rem;
+    font-weight: 600;
+    border-radius: 2px;
+    margin-left: 0.25rem;
+}

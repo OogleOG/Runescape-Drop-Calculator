@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RuneScape Drop Rate Calculator | RS3 & OSRS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dropcalc.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Loot Oracle</h1>
+        <p class="subtitle">RuneScape Drop Rate Calculator</p>
+        
+        <div class="game-selector">
+            <button class="game-btn rs3 active" data-game="rs3">RuneScape 3</button>
+            <button class="game-btn osrs" data-game="osrs">Old School</button>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <aside class="panel config-panel">
+            <h2 class="panel-title">Configuration</h2>
+            
+            <div class="search-box">
+                <input type="text" id="bossSearch" placeholder="Search bosses...">
+            </div>
+            
+            <div class="boss-grid" id="bossGrid"></div>
+            
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label>Team Size</label>
+                <div class="team-size-grid">
+                    <button class="team-btn active" data-size="1">Solo</button>
+                    <button class="team-btn" data-size="2">Duo</button>
+                    <button class="team-btn" data-size="3">Trio</button>
+                    <button class="team-btn" data-size="4">4-Man</button>
+                    <button class="team-btn" data-size="5">5-Man</button>
+                    <button class="team-btn" data-size="7">7-Man</button>
+                    <button class="team-btn" data-size="10">10-Man</button>
+                    <button class="team-btn" data-size="0">Mass</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Kill Time (seconds) <span class="info-tooltip" title="Average time per kill including banking">?</span></label>
+                <input type="number" id="killTime" placeholder="e.g. 180" min="1">
+            </div>
+            
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="hours">By Hours</button>
+                <button class="tab-btn" data-tab="kills">By Kills</button>
+            </div>
+            
+            <div class="form-group" id="hoursGroup">
+                <label>Hours to Grind</label>
+                <div class="hours-input-group">
+                    <input type="number" id="hoursInput" placeholder="e.g. 10" min="1">
+                    <span>hrs</span>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="killsGroup">
+                <label>Number of Kills</label>
+                <input type="number" id="killsInput" placeholder="e.g. 100" min="1">
+            </div>
+
+            <!-- Luck Enhancers Section -->
+            <div class="luck-enhancers-section">
+                <div class="luck-enhancers-title">Luck Enhancers</div>
+                <div id="luckEnhancersContainer"></div>
+                <div class="luck-summary" id="luckSummary">
+                    <div class="luck-summary-title">Active Luck Bonus</div>
+                    <div class="luck-summary-value" style="color: var(--text-secondary);">None</div>
+                    <div class="luck-summary-detail">Enable a luck enhancer to boost drop rates</div>
+                </div>
+            </div>
+            
+            <button class="calculate-btn" id="calculateBtn">Calculate Drops</button>
+        </aside>
+
+        <section class="results-panel">
+            <div class="panel">
+                <h2 class="panel-title">Summary Statistics</h2>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card kph">
+                        <div class="stat-label">Kills Per Hour</div>
+                        <div class="stat-value" id="kphValue">-</div>
+                    </div>
+                    <div class="stat-card gp">
+                        <div class="stat-label">GP/Hour (Est.)</div>
+                        <div class="stat-value" id="gphValue">-</div>
+                    </div>
+                    <div class="stat-card rare">
+                        <div class="stat-label">Rare Drops Expected</div>
+                        <div class="stat-value" id="rareValue">-</div>
+                    </div>
+                    <div class="stat-card time">
+                        <div class="stat-label">Time for Rare</div>
+                        <div class="stat-value" id="timeValue">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title">Drop Table</h2>
+                <div id="dropsContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎲</div>
+                        <p>Select a boss and configure your settings to see drop calculations</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel luck-calculator">
+                <h2 class="panel-title">Luck Analysis</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+                    Probability of receiving at least one rare drop based on your kills
+                </p>
+                <div class="luck-grid" id="luckGrid">
+                    <div class="luck-card">
+                        <div class="luck-label">Chance at Rate</div>
+                        <div class="luck-value" id="chanceAtRate">63.2%</div>
+                    </div>
+                    <div class="luck-card">
+                        <div class="luck-label">Chance 2x Rate</div>
+                        <div class="luck-value" id="chance2xRate">86.5%</div>
+                    </div>
+                    <div class="luck-card">
+                        <div class="luck-label">Chance 3x Rate</div>
+                        <div class="luck-value" id="chance3xRate">95.0%</div>
+                    </div>
+                    <div class="luck-card">
+                        <div class="luck-label">Your Chance</div>
+                        <div class="luck-value" id="yourChance">-</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Data sourced from <a href="https://runescape.wiki" target="_blank">RuneScape Wiki</a> & <a href="https://oldschool.runescape.wiki" target="_blank">OSRS Wiki</a></p>
+        <p style="margin-top: 0.5rem;">Drop rates are official Jagex-published values. Prices may vary.</p>
+    </footer>
+
+    <script src="dropcalc.js"></script>
+</body>
+</html>
